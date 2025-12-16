@@ -4,9 +4,7 @@ import { useSignIn, useSignUp } from "@clerk/clerk-react";
 import { useNavigate } from "react-router-dom";
 import DecryptedText from "../components/DecryptedText";
 import Dither from "../components/Dither";
-// ❌ Removed StickerPeel import
-// import StickerPeel from "../components/StickerPeel";
-import logo from "../assets/sticker.png";
+// import logo from "../assets/sticker.png"; // optional if you need later
 
 export default function Login() {
     const [mode, setMode] = useState("sign-in"); // "sign-in" | "sign-up"
@@ -31,7 +29,6 @@ export default function Login() {
     } = useSignUp();
 
     const navigate = useNavigate();
-
     const isAuthLoaded = mode === "sign-in" ? signInLoaded : signUpLoaded;
 
     const handleChange = (e) => {
@@ -107,9 +104,10 @@ export default function Login() {
     };
 
     return (
-        <div className="min-h-screen bg-slate-950 grid lg:grid-cols-[minmax(0,1.3fr)_minmax(0,1fr)]">
-            {/* LEFT SIDE: Dither background + DecryptedText */}
-            <div className="relative hidden lg:block overflow-hidden">
+        <div className="min-h-screen bg-slate-950 grid lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] relative overflow-hidden">
+            {/* LEFT SIDE: New styling + OLD Dither effect */}
+            <div className="relative hidden lg:flex overflow-hidden">
+                {/* Real Dither from ../components/Dither with old props */}
                 <div className="absolute inset-0">
                     <Dither
                         waveColor={[0.2, 0.2, 0.4]}
@@ -123,61 +121,122 @@ export default function Login() {
                     />
                 </div>
 
-                <div className="relative z-10 h-full w-full flex flex-col justify-center px-12 text-slate-50 pointer-events-none">
-                    {/* Example 1 – slower */}
+                {/* Gradient overlay for smooth blend to right */}
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-slate-950/40" />
+
+                {/* Subtle grid pattern */}
+                <div
+                    className="absolute inset-0 opacity-[0.03]"
+                    style={{
+                        backgroundImage: `linear-gradient(rgba(99, 102, 241, 0.5) 1px, transparent 1px),
+                                          linear-gradient(90deg, rgba(99, 102, 241, 0.5) 1px, transparent 1px)`,
+                        backgroundSize: "50px 50px",
+                    }}
+                />
+
+                {/* Main content */}
+                <div className="relative z-10 h-full w-full flex flex-col justify-center px-16 text-slate-50">
+                    {/* Decorative badge */}
+                    <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-500/10 border border-indigo-500/20 backdrop-blur-sm w-fit mb-8">
+                        <div className="w-2 h-2 rounded-full bg-indigo-400 animate-pulse" />
+                        <span className="text-xs font-medium text-indigo-300">
+                            Enterprise Security Platform
+                        </span>
+                    </div>
+
+                    {/* Heading */}
                     <DecryptedText
                         text="Secure. Smart. Modern."
-                        speed={140}               // slower
+                        speed={140}
                         maxIterations={30}
                         characters="ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
-                        className="text-4xl font-bold tracking-tight"
+                        className="text-5xl lg:text-6xl font-bold tracking-tight bg-gradient-to-r from-slate-50 via-indigo-200 to-slate-300 bg-clip-text text-transparent"
                         encryptedClassName="opacity-60"
-                        parentClassName="mb-4"
+                        parentClassName="mb-6"
                         animateOn="view"
                         revealDirection="center"
                     />
 
-                    {/* Example 2 – slower */}
+                    {/* Subtitle */}
                     <DecryptedText
                         text="PhishingTool Dashboard"
                         speed={160}
                         maxIterations={32}
                         characters="ABCD1234!?"
-                        className="text-xl font-medium text-blue-100"
+                        className="text-2xl font-semibold text-indigo-300/90"
                         encryptedClassName="opacity-60"
-                        parentClassName="mb-6"
+                        parentClassName="mb-8"
                         animateOn="view"
                         revealDirection="start"
                     />
 
-                    {/* Example 3 – slower */}
-                    <div className="mt-10 space-y-3 max-w-md text-sm text-blue-100/80">
+                    {/* Description */}
+                    <div className="max-w-xl space-y-4 text-slate-300/80">
                         <DecryptedText
-                            text="Monitor sessions, detect anomalies, and keep your users safe."
+                            text="Monitor sessions, detect anomalies, and keep your users safe with advanced threat intelligence."
                             speed={150}
                             maxIterations={35}
-                            className=""
+                            className="text-base leading-relaxed"
                             encryptedClassName="opacity-70"
                             parentClassName=""
                             animateOn="view"
                             revealDirection="center"
                         />
                     </div>
+
+                    {/* Feature highlights */}
+                    <div className="mt-12 grid grid-cols-3 gap-6 max-w-2xl">
+                        {[
+                            { icon: "🛡️", label: "Real-time Protection", value: "99.9%" },
+                            { icon: "⚡", label: "Response Time", value: "<100ms" },
+                            { icon: "🔒", label: "Encrypted", value: "256-bit" },
+                        ].map((item, i) => (
+                            <div key={i} className="group">
+                                <div className="p-4 rounded-2xl bg-slate-800/30 border border-slate-700/50 backdrop-blur-sm hover:bg-slate-800/50 hover:border-indigo-500/30 transition-all duration-300">
+                                    <div className="text-2xl mb-2">{item.icon}</div>
+                                    <div className="text-xs text-slate-400 mb-1">{item.label}</div>
+                                    <div className="text-lg font-bold text-indigo-300">
+                                        {item.value}
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+
+                    {/* Floating particles */}
+                    <div className="absolute inset-0 pointer-events-none overflow-hidden">
+                        {[...Array(15)].map((_, i) => (
+                            <div
+                                key={i}
+                                className="absolute w-1 h-1 bg-indigo-400/40 rounded-full animate-pulse"
+                                style={{
+                                    left: `${Math.random() * 100}%`,
+                                    top: `${Math.random() * 100}%`,
+                                    animationDelay: `${Math.random() * 3}s`,
+                                    animationDuration: `${Math.random() * 2 + 2}s`,
+                                }}
+                            />
+                        ))}
+                    </div>
                 </div>
 
-                {/* Sticker removed from here */}
+                {/* Right edge gradient for seamless blend */}
+                <div className="absolute right-0 inset-y-0 w-32 bg-gradient-to-l from-slate-950 to-transparent pointer-events-none" />
             </div>
 
-            {/* RIGHT SIDE: Auth card */}
-            <div className="flex items-center justify-center px-4 py-10 lg:px-8">
-                <div className="w-full max-w-lg bg-slate-900/85 border border-slate-800 rounded-3xl shadow-2xl p-8">
+            {/* RIGHT SIDE: keep your Clerk auth card (older code styling) */}
+            <div className="flex items-center justify-center px-4 py-10 lg:px-8 relative">
+                {/* Optional subtle background glow to match left */}
+                <div className="absolute inset-0 bg-gradient-to-br from-indigo-950/20 via-transparent to-transparent pointer-events-none" />
+
+                <div className="w-full max-w-lg bg-slate-900/85 border border-slate-800 rounded-3xl shadow-2xl p-8 relative z-10">
                     {/* Toggle Login / Sign up */}
                     <div className="flex mb-8 rounded-2xl bg-slate-900/90 p-1">
                         <button
                             type="button"
                             onClick={() => setMode("sign-in")}
                             className={`flex-1 py-2.5 text-sm font-medium rounded-xl transition
-                ${mode === "sign-in"
+                                ${mode === "sign-in"
                                     ? "bg-slate-800 text-slate-100"
                                     : "text-slate-400 hover:text-slate-100"
                                 }`}
@@ -188,7 +247,7 @@ export default function Login() {
                             type="button"
                             onClick={() => setMode("sign-up")}
                             className={`flex-1 py-2.5 text-sm font-medium rounded-xl transition
-                ${mode === "sign-up"
+                                ${mode === "sign-up"
                                     ? "bg-slate-800 text-slate-100"
                                     : "text-slate-400 hover:text-slate-100"
                                 }`}
@@ -365,3 +424,4 @@ export default function Login() {
         </div>
     );
 }
+    

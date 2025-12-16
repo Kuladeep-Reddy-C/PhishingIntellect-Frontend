@@ -7,40 +7,34 @@ export default function Auth() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (!isLoaded) return; // wait for Clerk to load
+        if (!isLoaded) return;
 
-        // If not signed in → go to login
+        // Not logged in → login
         if (!isSignedIn || !user) {
             navigate("/login", { replace: true });
             return;
         }
 
-        // Get role from metadata
-        const currentRole = user.unsafeMetadata?.role;
+        const role = user.unsafeMetadata?.role;
 
-        // Case 1: User has a role
-        if (currentRole === "admin") {
-            navigate("/dashboard-admin", { replace: true });
+        // If role exists → go home
+        if (role === "admin" || role === "user") {
+            navigate("/home", { replace: true });
             return;
         }
 
-        if (currentRole === "user") {
-            navigate("/dashboard-user", { replace: true });
-            return;
-        }
-
-        // Case 2: No role set → assign "user" automatically
+        // No role → assign default
         const setDefaultRole = async () => {
             try {
                 await user.update({
                     unsafeMetadata: {
                         ...user.unsafeMetadata,
-                        role: "user"
-                    }
+                        role: "user",
+                    },
                 });
-                navigate("/dashboard-user", { replace: true });
+                navigate("/home", { replace: true });
             } catch (err) {
-                console.error("Failed to set default role:", err);
+                console.error(err);
                 navigate("/login", { replace: true });
             }
         };

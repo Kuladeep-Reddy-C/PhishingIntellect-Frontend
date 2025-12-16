@@ -1,19 +1,58 @@
-import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/clerk-react'
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import Auth from './pages/Auth/Auth'
-import DashBoardAdmin from "./pages/DashBoardAdmin"
-import DashBoardUser from "./pages/DashBoardUser"
-import Login from "./pages/Login"
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import MainLayout from "./layouts/MainLayout";
 
-export default function App() {
+import HomePage from "./pages/HomePage";
+import DetectPage from "./pages/DetectPage";
+import ReportPage from "./pages/ReportPage";
+import AboutPage from "./pages/AboutPage";
+import Login from "./pages/Login";
+import Auth from "./pages/Auth/Auth";
+function App() {
   return (
-    <BrowserRouter>
+    <Router>
       <Routes>
+        {/* Auth gate */}
         <Route path="/" element={<Auth />} />
-        <Route path="/dashboard-admin" element={<DashBoardAdmin />} />
-        <Route path="/dashboard-user" element={<DashBoardUser />} />
-        <Route path="/Login" element={<Login />} />
+
+        {/* Login */}
+        <Route path="/login" element={<Login />} />
+
+        {/* Protected routes */}
+        <Route
+          path="/home"
+          element={
+            <MainLayout>
+              <HomePage />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="/detect"
+          element={
+            <MainLayout>
+              <DetectPage />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="/report"
+          element={
+            <MainLayout>
+              <ReportPage />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="/about"
+          element={
+            <MainLayout>
+              <AboutPage />
+            </MainLayout>
+          }
+        />
       </Routes>
-    </BrowserRouter>
-  )
+    </Router>
+  );
 }
+
+export default App;
